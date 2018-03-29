@@ -1,0 +1,22 @@
+# This file is part of requests2jmx-via-bzt.
+# https://github.com/belonesox/requests2jmx-via-bzt
+
+# Licensed under the MIT license:
+# http://www.opensource.org/licenses/MIT-license
+# Copyright (c) 2018, Stas Fomin <stas-fomin@yandex.ru>
+
+[run]
+omit =
+    *tests.py
+branch = True
+source =
+    requests2jmx_via_bzt
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    from urllib.parse import parse_qs
+    except ImportError:
