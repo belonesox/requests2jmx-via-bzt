@@ -47,6 +47,10 @@ Convert any tests with requests like Selenium to Jmeter JMX file using blazemete
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
+        'bzt>=1.11.0',
+        "json5>=0.2.4",
+        "simplejson>=3.8.0"
+        # '',
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
     ],
@@ -56,7 +60,7 @@ Convert any tests with requests like Selenium to Jmeter JMX file using blazemete
     entry_points={
         'console_scripts': [
             # add cli scripts here in this form:
-            'requests2jmx-via-bzt=requests2jmx_via_bzt.cli:main',
+            'requests2jmx-via-bzt=requests2jmx_via_bzt:main',
         ],
     },
 )

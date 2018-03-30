@@ -1,0 +1,15 @@
+#!/usr/bin/env bzt
+---         
+included-configs:
+- global.yml                                                                                                                                                                                                                                   
+
+scenarios:                                                                                                                                                                                                                                   
+  generated-jmx:                                                                                                                                                                                                                                    
+    script: generated-firefox.jmx
+
+execution:
+  - scenario: generated-jmx
+    concurrency: 10
+    ramp-up: 50s    
+    hold-for: 3m
+
