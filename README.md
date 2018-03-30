@@ -2,8 +2,8 @@
 
 # The problem.
 
-* Jmeter is efficient and industry-standard way for  stress/performance testing.
-  * Even modern testing frameworks, like Taurus, used it.
+* [Jmeter](https://jmeter.apache.org/) is efficient and industry-standard way for  stress/performance testing.
+  * Even modern testing frameworks, like [Taurus](http://gettaurus.org), used it.
 * But:
   * JMeter UI sucks.
   * JMeter tests are blind and fragile.
@@ -13,11 +13,12 @@
 * Selenium tests (Python-Java-PHP-etc) are well known standard for automated functional testing.
   * But using it for performance testing (with jumbo VMs, Selenigum Grids, bunch of VMs and docker containers) is very unefficient.
 
+---
 Lets combine both ways!
 * Selenium tests will be first class citizens (regularly updated, tested, etc).
 * We will automatically generate fresh Jmeter JMX tests from Selenium tests.
-* We will run mix of "smart" Selenium tests and bunch of "stupid" generated JMeter tests together, 
-  * to create heavy load
+* We will run mix of "smart" Selenium tests and bunch of "stupid" generated JMeter tests together: 
+  * to create heavy load from JMeter tests.
   * log specific errors/screenshots, etc using real browser tests.
 
 How to convert Selenium tests to JMX?
@@ -26,9 +27,9 @@ How to convert Selenium tests to JMX?
    * But it need that you have internet access to non-standard ports like ``15521`` — such nonprivileged ports frequently banned in "enterprise infrastructure" (only 80 and 443 allowed).
       * And no usual way how to specify port forwarding to Taurus.
 * Also there is no way now how generated JMX can be filtered from "noisy" requests to browser related services. For example, Firefox, used by Selenium Geckodriver, make a lot of requests to 
-    * *.cdn.mozilla.net
-    * *.services.mozilla.com
-    * *.mozilla.org
+    * ``*.cdn.mozilla.net``
+    * ``*.services.mozilla.com``
+    * ``*.mozilla.org``
 * Also there is no way now how to specify output filename for generated JMX.    
 
 This small ugly package solve these problems. 
@@ -47,8 +48,13 @@ and get:
 Right now worked and tested on Linuxes (need to run commandline ``ssh`` client)
 ```
 sudo pip install bzt
-sudo pip install https://github.com/belonesox/requests2jmx-via-bzt.git 
+sudo pip install git+https://github.com/belonesox/requests2jmx-via-bzt.git 
 ```
+or checkout the project and run usual
+```
+python setup.py install
+```
+
 
 * Register on Blazemeter service
 * Put token/secret from settings to ``~/.bzt-rc``
@@ -71,7 +77,7 @@ requests2jmx-via-bzt  selenum_script.py  yourvps.somewhere.com:ssh_port generate
 ```
 
 # Demo
-Look at ``example`` folder.
+Look at project folder ``example``.
 
 * ``0x1tv.py`` — sample selenium test on python. 
   * If you are new in Selenium testing:
@@ -97,12 +103,12 @@ BTW, better, if you will run heavy load (>10 sessions) on any other site.
 * http://0x1.tv — it is my video conference hobby, it is not ready now for heavy load.
 
 # ToDo
-I hope:
-* That all this stuff will became unusual if Taurus owners add couple of settings/features.
+I hope that all this stuff will became unusual if Taurus owners add couple of settings/features.
 
 But I do not like the idea, that we have to 
-push all requests (including authentification info)
-to some private service.
+push all requests (including real authentification info)
+to some private services.
+Also, we cannot use external service if our testing targets also located inside a corporate network.
 
 I think will be better to wrote independent
 open source local proxy with filtering
