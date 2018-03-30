@@ -1,15 +1,22 @@
 #!/usr/bin/env bzt
 ---         
-included-configs:
-- global.yml                                                                                                                                                                                                                                   
-
 scenarios:                                                                                                                                                                                                                                   
   generated-jmx:                                                                                                                                                                                                                                    
     script: generated-firefox.jmx
+  selenium-origin:                                                                                                                                                                                                                                    
+    script: 0x1tv.py
 
 execution:
-  - scenario: generated-jmx
-    concurrency: 10
+  - executor: selenium
+    scenario: selenium-origin
+    concurrency: 3
     ramp-up: 50s    
     hold-for: 3m
+  - executor: jmeter
+    scenario: generated-jmx
+    concurrency: 100
+    ramp-up: 50s    
+    hold-for: 3m
+
+
 
