@@ -3,49 +3,52 @@
 # The problem.
 
 * [Jmeter](https://jmeter.apache.org/) is efficient and industry-standard way for  stress/performance testing.
-  * Even modern testing frameworks, like [Taurus](http://gettaurus.org), used it.
+  * Even modern testing frameworks like [Taurus](http://gettaurus.org) use it.
 * But:
   * JMeter UI sucks.
   * JMeter tests are blind and fragile.
-    * Even if we parametrise authentification headers etc.
+    * Even if we parametrize authentication headers etc.
   * JMX format unusable for version control systems.
 
-* Selenium tests (Python-Java-PHP-etc) are well known standard for automated functional testing.
-  * But using it for performance testing (with jumbo VMs, Selenigum Grids, bunch of VMs and docker containers) is very unefficient.
+* Selenium tests (Python-Java-PHP-etc) is a well known standard for automated functional testing.
+  * But using it for performance testing (with jumbo VMs, Selenigum Grids, a bunch of VMs and docker containers) is very inefficient.
 
 ---
-Lets combine both ways!
-* Selenium tests will be first class citizens (regularly updated, tested, etc).
+Let's combine both ways!
+* Selenium tests will be first class citizens (regularly updated, tested, etc.).
 * We will automatically generate fresh Jmeter JMX tests from Selenium tests.
-* We will run mix of "smart" Selenium tests and bunch of "stupid" generated JMeter tests together: 
+* We will run a mix of "smart" Selenium tests and a bunch of "stupid" generated JMeter tests together: 
   * to create heavy load from JMeter tests.
-  * log specific errors/screenshots, etc using real browser tests.
+  * to log specific errors/screenshots, etc. using real browser tests.
 
 How to convert Selenium tests to JMX?
-* Modern framework [Taurus](http://gettaurus.org) has module ``proxy2jmx``, which with with private service [Blazemeter](https://www.blazemeter.com/) can automatically generate JMX file from intercepted requests of Selenium Scripts.
-   * It is private (but free) service.
-   * But it need that you have internet access to non-standard ports like ``15521`` — such nonprivileged ports frequently banned in "enterprise infrastructure" (only 80 and 443 allowed).
-      * And no usual way how to specify port forwarding to Taurus.
-* Also there is no way now how generated JMX can be filtered from "noisy" requests to browser related services. For example, Firefox, used by Selenium Geckodriver, make a lot of requests to 
+* [Taurus](http://gettaurus.org), a modern testing framework, has a module ``proxy2jmx``, which together with with a private service from [Blazemeter](https://www.blazemeter.com/) can automatically generate JMX file from intercepted requests of Selenium Scripts.
+   * This service is private but free.
+   * It requires you to have internet access to non-standard ports like ``15521`` — such non-privileged ports are frequently banned in "enterprise infrastructure" (only 80 and 443 allowed).
+      * And there is no usual way to specify port forwarding in Taurus.
+* Currently there is no way to filter generated JMX from "noisy" requests to browser related services. For example, Firefox that is used by Selenium Geckodriver, makes a lot of requests to 
     * ``*.cdn.mozilla.net``
     * ``*.services.mozilla.com``
     * ``*.mozilla.org``
-* Also there is no way now how to specify output filename for generated JMX.    
+* There is also no way at the moment now how to specify output filename for generated JMX.    
 
-This small ugly package solve these problems. 
-It use
+This small ugly package solves aforementioned problems. 
+It employs
 * monkey-patched Taurus and Blazemeter service
-* provided selenium test
+* provided Selenium test
 * SSH and some provided external VPS
 
-and get:
-* Filtered JMX file with given filename
+Its output is:
+* Filtered JMX file with a specified filename filename
 
   
 
 # Installation
 
-Right now worked and tested on Linuxes (need to run commandline ``ssh`` client)
+It has been tested and right now works on Linuxes (because it need to run commandline ``ssh`` client).
+
+Installation:
+
 ```
 sudo pip install bzt
 sudo pip install git+https://github.com/belonesox/requests2jmx-via-bzt.git 
@@ -64,7 +67,7 @@ modules:
     token: "… token … :… secret … "
 ```
 
-* Get some VPS outside enterprise infrastructure. 
+* Get some VPS outside your enterprise infrastructure. 
   * Even $1 VPS from http://lowendstock.com/ will be OK.
 * Setup some linux on it, with SSH daemon
   * Put your ssh keys for some user on it.
@@ -77,7 +80,7 @@ requests2jmx-via-bzt  selenum_script.py  yourvps.somewhere.com:ssh_port generate
 ```
 
 # Demo
-Look at project folder ``example``.
+Look at the project folder ``example``.
 
 * ``0x1tv.py`` — sample selenium test on python. 
   * If you are new in Selenium testing:
@@ -98,21 +101,18 @@ or
 ```
 Look at Taurus docs.
 
-BTW, better, if you will run heavy load (>10 sessions) on any other site.
+BTW, better, if you run heavy load (>10 sessions) on any other site.
 
-* http://0x1.tv — it is my video conference hobby, it is not ready now for heavy load.
+* http://0x1.tv — it is my video conference hobby and it is not heavy load ready now.
 
 # ToDo
-I hope that all this stuff will became unusual if Taurus owners add couple of settings/features.
+I hope that all this stuff will become unnecessary if Taurus owners add a couple of extra settings/features.
 
-But I do not like the idea, that we have to 
-push all requests (including real authentification info)
-to some private services.
-Also, we cannot use external service if our testing targets also located inside a corporate network.
+Actually, I do not like the idea that we have to 
+push all requests (including real authentication info)
+to some private services. Also we cannot use external service if our testing targets also located inside a corporate network.
 
-I think will be better to wrote independent
-open source local proxy with filtering
-to generate JMX.
+I think it is better to write an independent open source local proxy with filtering for JMX generation.
 
 # Contacts
 * Issues, patches — welcomed.
